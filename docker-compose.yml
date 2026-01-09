@@ -4,44 +4,57 @@ services:
   # --- 1. DATABASE SERVICE ---
   db_service:
     image: mysql:8.0
-    container_name: db_${GROUP_NAME}
+    container_name: randoquest_db
     restart: always
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: randoquest_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: rootpassword
-    # volumes
-    # Network
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - randoquest_net
 
   # --- 2. APP SERVICE ---
   app_service:
     build: ./app
-    container_name: app_${GROUP_NAME}
+    container_name: randoquest_app
     restart: always
-    expose:
-      - "3000"
     environment:
       - DB_HOST=db_service
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
+      - DB_USER=user
+      - DB_PASS=password
+      - DB_NAME=randoquest_db
       - APP_PORT=3000
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules # Mencegah node_modules lokal menimpa di dalam container
     depends_on:
       - db_service
-    # Network
+    networks:
+      - randoquest_net
 
   # --- 3. NGINX SERVICE ---
   nginx_service:
     image: nginx:alpine
-    container_name: nginx_${GROUP_NAME}
+    container_name: randoquest_nginx
     restart: always
     ports:
-      - "${APP_PORT}:80"
+      - "2581:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app_service
-    # Network
-    # volumes
+    networks:
+      - randoquest_net
 
 #--- VOLUMES AND NETWORKS ---
-# tambahkan bagian volumes dan networks di sini
+volumes:
+  mysql_data:
+
+
+networks:
+  randoquest_net:
+    driver: bridge

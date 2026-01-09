@@ -4,57 +4,58 @@ services:
   # --- 1. DATABASE SERVICE ---
   db_service:
     image: mysql:8.0
-    container_name: randoquest_db
+    container_name: db_${GROUP_NAME}
     restart: always
     environment:
-      MYSQL_DATABASE: randoquest_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - randoquest_net
+      - app_network
 
   # --- 2. APP SERVICE ---
   app_service:
     build: ./app
-    container_name: randoquest_app
+    container_name: app_${GROUP_NAME}
     restart: always
+    expose:
+      - "3000"
     environment:
       - DB_HOST=db_service
-      - DB_USER=user
-      - DB_PASS=password
-      - DB_NAME=randoquest_db
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
       - APP_PORT=3000
-    volumes:
-      - ./app:/usr/src/app
-      - /usr/src/app/node_modules # Mencegah node_modules lokal menimpa di dalam container
     depends_on:
       - db_service
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
-      - randoquest_net
+      - app_network
 
   # --- 3. NGINX SERVICE ---
   nginx_service:
     image: nginx:alpine
-    container_name: randoquest_nginx
+    container_name: nginx_${GROUP_NAME}
     restart: always
     ports:
       - "2581:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app_service
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - randoquest_net
+      - app_network
 
-#--- VOLUMES AND NETWORKS ---
 volumes:
-  mysql_data:
+  db_data:
 
 
 networks:
-  randoquest_net:
+  app_network:
     driver: bridge

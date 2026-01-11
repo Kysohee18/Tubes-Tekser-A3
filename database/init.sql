@@ -1,18 +1,26 @@
+-- 1. Buat Database
+CREATE DATABASE IF NOT EXISTS randoquest_db;
+USE randoquest_db;
+
+-- 2. Buat Tabel Utama (Hanya 1 Tabel)
 CREATE TABLE IF NOT EXISTS challenges (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
+    difficulty ENUM('Easy', 'Medium', 'Hard') NOT NULL DEFAULT 'Medium',
+    contributor VARCHAR(100) DEFAULT 'Anonymous',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO challenges (title, description) VALUES
-('Pushups', 'Do 20 pushups right now!'),
-('Drink Water', 'Drink a full glass of water.'),
-('Quick Clean', 'Clean your desk for 5 minutes.'),
-('Stretch', 'Stretch your arms and legs.'),
-('Short Walk', 'Walk around your room for 2 minutes.'),
-('No Screen', 'Look away from the screen for 1 minute.'),
-('Breathe', 'Take 5 deep breaths.'),
-('Plank', 'Hold a plank for 30 seconds.'),
-('Say Hello', 'Send a friendly message to a friend.'),
-('Visualize', 'Visualize your goal for 2 minutes.');
+-- 3. Seed Data (Data Awal Wajib)
+-- Agar saat demo aplikasi tidak kosong melompong
+INSERT INTO challenges (description, difficulty, contributor) VALUES 
+('Nyanyi lagu "Balonku" tapi semua huruf vokal diganti O', 'Medium', 'System'),
+('Push up 10 kali dalam 20 detik sekarang juga!', 'Hard', 'GymBro'),
+('Sebutkan 5 nama kota di Indonesia yang berawalan huruf S', 'Easy', 'Admin'),
+('Kirim stiker random ke grup WhatsApp keluarga', 'Hard', 'Prankster'),
+('Tahan nafas selama 30 detik', 'Medium', 'HealthCheck'),
+('Tirukan suara hewan favoritmu sekeras mungkin', 'Easy', 'Anonim'),
+('Minum air putih 1 gelas sekarang', 'Easy', 'HealthBot'),
+('Baca 1 berita internasional hari ini', 'Medium', 'NewsReader'),
+('Sebutkan 3 kata yang berakhiran "ng"', 'Easy', 'Linguist'),
+('Lakukan plank selama 45 detik', 'Hard', 'FitnessCoach');

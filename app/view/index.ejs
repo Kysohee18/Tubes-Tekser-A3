@@ -53,15 +53,22 @@
       color: var(--primary);
       background: transparent;
       padding: 0.75rem 1.5rem;
-      transition: all 300ms ease;
+      transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
       text-transform: lowercase;
       font-weight: 400;
       display: inline-block;
     }
 
-    .btn-minimal:hover {
-      background: var(--primary);
-      color: var(--white);
+    .btn-submit:hover {
+      background: #22c55e !important;
+      border-color: #22c55e !important;
+      color: var(--white) !important;
+    }
+
+    .btn-pool:hover {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      color: var(--white) !important;
     }
 
     .btn-minimal:disabled {
@@ -91,6 +98,16 @@
         opacity: 1;
         transform: translateY(0);
       }
+    }
+
+    /* Pool Drawer */
+    #poolDrawer {
+      transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+    }
+
+    #poolDrawer.closed {
+      transform: translateX(100%);
     }
 
     /* Custom Elements */
@@ -180,17 +197,22 @@
   <header class="header-glass fixed top-0 w-full z-50">
     <div class="max-w-7xl mx-auto px-12 py-6 flex items-center justify-between">
       <h1 class="text-xl font-light tracking-[0.2em] lowercase">randoquest.</h1>
-      <button onclick="openSubmit()" class="btn-minimal">
-        submit challenge
-      </button>
+      <div class="flex gap-4">
+        <button onclick="togglePool()" class="btn-minimal btn-pool">
+          community pool
+        </button>
+        <button onclick="openSubmit()" class="btn-minimal btn-submit">
+          submit challenge
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="flex-1 grid lg:grid-cols-[60%_40%] h-full pt-20">
+  <main class="flex-1 h-full pt-20 relative">
 
-    <!-- Left Panel -->
-    <div class="flex flex-col items-center justify-center p-16 bg-white overflow-y-auto">
+    <!-- Left Panel (Now Full Width) -->
+    <div class="h-full flex flex-col items-center justify-center p-16 bg-white overflow-y-auto">
       <div class="w-full max-w-xl text-center space-y-12">
 
         <div id="displayArea" class="min-h-[300px] flex items-center justify-center">
@@ -214,11 +236,18 @@
       </div>
     </div>
 
-    <!-- Right Panel -->
-    <div class="h-full border-l border-[#E5E5E5] bg-[#FAFAFA] flex flex-col overflow-hidden">
-      <div class="p-12 pb-6">
-        <h2 class="text-header text-[0.7rem] text-gray-400 mb-2">CHALLENGES</h2>
-        <p class="text-xl font-light">Community pool. <span class="text-gray-300" id="totalCnt">0</span></p>
+    <!-- Right Panel (Drawer) -->
+    <div id="poolDrawer" class="closed fixed right-0 top-0 bottom-0 w-full lg:w-[450px] border-l border-[#E5E5E5] bg-white z-[55] flex flex-col overflow-hidden pt-24">
+      <div class="p-12 pb-6 flex justify-between items-start">
+        <div>
+          <h2 class="text-header text-[0.7rem] text-gray-400 mb-2">CHALLENGES</h2>
+          <p class="text-xl font-light">Community pool. <span class="text-gray-300" id="totalCnt">0</span></p>
+        </div>
+        <button onclick="togglePool()" class="text-gray-400 hover:text-black mt-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <div id="cList" class="custom-scroll overflow-y-auto px-12 flex-1 pb-12">
@@ -270,6 +299,11 @@
     let isEdit = false;
 
     window.onload = () => { sync(); };
+
+    function togglePool() {
+      const drawer = document.getElementById('poolDrawer');
+      drawer.classList.toggle('closed');
+    }
 
     async function sync() {
       try {

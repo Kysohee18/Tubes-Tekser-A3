@@ -136,3 +136,40 @@ Jika saat `git pull` muncul tulisan *"Conflict"*, jangan panik:
 
 ---
 
+## 🗺️ TAHAP 5: DOKUMENTASI TEKNIS (PETA KODE)
+
+Bagian ini menjelaskan letak kode penting agar tim mudah melakukan navigasi dan pengembangan.
+
+### 1. 🏗️ Topologi Infrastruktur (Docker & Network)
+Konfigurasi alur request tersimpan di:
+*   **`docker-compose.yml`**: Mengatur orkestrasi 3 service (db, app, nginx).
+    *   *Port Mapping:* Host (2581) ➔ Nginx (2581).
+    *   *Network:* `app_network` (Internal bridge).
+*   **`nginx/default.conf`**: Konfigurasi Reverse Proxy.
+    *   Mengatur `listen 2581` dan `proxy_pass http://app_service:3000`.
+*   **`app/Dockerfile`**: Blueprint image untuk environment Node.js 18-alpine.
+
+### 2. 🗄️ Rancangan Database
+Semua skema database dikelola melalui:
+*   **`database/init.sql`**: Berisi query DDL (`CREATE TABLE challenges`) dan DML (`INSERT INTO` data seed).
+*   *Struktur Tabel:* `id`, `description`, `difficulty` (ENUM), `contributor`, `created_at`.
+
+### 3. 🧠 Backend & Routes (Sistem CRUD)
+Logika utama aplikasi berada di folder `/app`:
+*   **`app/app.js`**: Entry point aplikasi, inisialisasi Express, Middleware, dan port server (3000).
+*   **`app/config/database.js`**: Konfigurasi koneksi MySQL menggunakan library `mysql2/promise` dengan sistem **Retry Connection** (Mencoba ulang koneksi jika DB belum siap).
+*   **`app/routes/index.js`**: **PUSAT LOGIKA SISTEM CRUD**.
+    *   `GET /`: Merender halaman utama dengan data tantangan.
+    *   `GET /api/challenges`: API untuk mengambil semua data (JSON).
+    *   `POST /api/challenges`: API untuk menambah tantangan baru.
+    *   `PUT /api/challenges/:id`: API untuk mengupdate tantangan yang sudah ada.
+    *   `DELETE /api/challenges/:id`: API untuk menghapus tantangan.
+
+### 4. 🎨 Frontend & Interactivity
+*   **`app/view/index.ejs`**: View engine utama.
+    *   *Styling:* Menggunakan Tailwind CSS untuk layout minimalis.
+    *   *Drawer Logic:* Sistem Community Pool menggunakan sliding drawer (Panel kanan).
+    *   *Client-side JS:* Mengatur animasi "Roll Random" dan interaksi Modal.
+*   **`app/public/`**: Folder untuk aset statis (CSS/JS tambahan jika diperlukan).
+
+---

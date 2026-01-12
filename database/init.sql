@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS randoquest_db;
 USE randoquest_db;
 
--- 2. Buat Tabel Utama (Hanya 1 Tabel)
+-- 2. Buat Tabel Utama 
 CREATE TABLE IF NOT EXISTS challenges (
     id INT AUTO_INCREMENT PRIMARY KEY,
     description TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS challenges (
 );
 
 -- 3. Seed Data (Data Awal Wajib)
--- Agar saat demo aplikasi tidak kosong melompong
+
 INSERT INTO challenges (description, difficulty, contributor) VALUES 
 ('Nyanyi lagu "Balonku" tapi semua huruf vokal diganti O', 'Medium', 'System'),
 ('Push up 10 kali dalam 20 detik sekarang juga!', 'Hard', 'GymBro'),

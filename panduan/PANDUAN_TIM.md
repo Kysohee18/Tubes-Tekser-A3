@@ -16,7 +16,23 @@ Panduan ini dirancang untuk Tim **A3** agar pengerjaan proyek berjalan mulus tan
 
 ---
 
-## 🛠️ TAHAP 1: SETUP AWAL REPOSITORY (Oleh: Shahky/Ketua)
+## � TECH STACK YANG DIGUNAKAN
+
+Berikut adalah teknologi utama yang membangun project **RandoQuest**:
+
+| Kategori | Teknologi | Deskripsi |
+| :--- | :--- | :--- |
+| **Orchestration** | 🐳 **Docker & Docker Compose** | Mengelola container dan environment secara konsisten. |
+| **Web Server** | 🌐 **Nginx** | Reverse Proxy untuk routing traffic dari Host (2581) ke App. |
+| **Backend** | 🟢 **Node.js (v18)** | Runtime utama aplikasi server-side. |
+| **Framework** | 🚂 **Express.js** | Framework minimalis untuk routing dan middleware API. |
+| **Database** | 🐬 **MySQL 8.0** | Relational Database Management System (RDBMS). |
+| **Frontend** | 🎨 **EJS + Tailwind CSS** | Templating engine dinamis dengan utility-first CSS framework. |
+| **Architecture** | 🔄 **MVC (Model-View-Controller)** | Pola arsitektur untuk memisahkan logika aplikasi. |
+
+---
+
+## �🛠️ TAHAP 1: SETUP AWAL REPOSITORY (Oleh: Shahky/Ketua)
 
 Ikuti urutan perintah ini tepat jika kamu sudah meng-clone template awal:
 
